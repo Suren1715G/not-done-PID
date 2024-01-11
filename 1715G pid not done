@@ -1,0 +1,223 @@
+#pragma region VEXcode Generated Robot Configuration
+// Make sure all required headers are included.
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <math.h>
+#include <string.h>
+
+
+#include "vex.h"
+
+using namespace vex;
+
+// Brain should be defined by default
+brain Brain;
+
+
+// START IQ MACROS
+#define waitUntil(condition)                                                   \
+  do {                                                                         \
+    wait(5, msec);                                                             \
+  } while (!(condition))
+
+#define repeat(iterations)                                                     \
+  for (int iterator = 0; iterator < iterations; iterator++)
+// END IQ MACROS
+
+
+// Robot configuration code.
+inertial BrainInertial = inertial();
+motor leftMotor = motor(PORT4, false);
+motor rightMotor = motor(PORT1, false);
+motor intakeMotorA = motor(PORT3, false);
+motor intakeMotorB = motor(PORT6, true);
+motor_group intake = motor_group(intakeMotorA, intakeMotorB);
+#pragma endregion VEXcode Generated Robot Configuration
+
+
+#include "vex.h"
+
+using namespace vex;
+
+// Brain should be defined by default
+brain Brain;
+
+
+// START IQ MACROS
+#define waitUntil(condition)                                                   \
+  do {                                                                         \
+    wait(5, msec);                                                             \
+   } while (!(condition))
+
+#define repeat(iterations)                                                     \
+  for (int iterator = 0; iterator < iterations; iterator++)
+// END IQ MACROS
+
+
+// Robot configuration code.
+inertial BrainInertial = inertial();
+motor leftMotor = motor(PORT4, false);
+motor rightMotor = motor(PORT1, false);
+motor intakeMotorA = motor(PORT3, false);
+motor intakeMotorB = motor(PORT6, true);
+motor_group intake = motor_group(intakeMotorA, intakeMotorB);
+#pragma endregion VEXcode Generated Robot Configuration
+#include <vex.h>
+
+using namespace vex;
+
+// Motor constants
+//motor leftMotor(PORT4);
+
+//motor rightMotor(PORT1);
+
+// Constants for PID control
+double kP = 0.2;  // Proportional constant
+double kI = 0.02; // Integral constant
+double kD = 0.2;  // Derivative constant
+
+// Target position in degrees (5 inches converted to motor rotations)
+double targetPosition = 360.0 * 10.0 / (2.75 * 3.14159265359); // Adjust for your robot's wheel size
+
+// PID control variables
+double integral = 0.0;
+double prevError = 0.2;
+
+// Error threshold for stopping
+double errorThreshold = 10.0; // Fine-tune as needed
+
+int main() 
+{
+  leftMotor.setVelocity(80, percent);
+  rightMotor.setVelocity(80, percent);
+  intake.setVelocity(127, percent);
+  leftMotor = motor(PORT4);
+  rightMotor= motor(PORT1);
+   
+  intake.spin(forward);
+
+   
+  // Reset motor encoders
+  leftMotor.setReversed(true);
+  //rightMotor.resetRotation();
+  while (true) 
+  {
+    // Calculate the average position of both motors in degrees
+    double currentPosition =(leftMotor.position(degrees) + rightMotor.position(degrees)) / 2.0;
+
+    // Calculate the error
+     double error = targetPosition - currentPosition;
+       
+      // Calculate integral and derivative terms
+    integral += error;
+    double derivative = error - prevError;
+
+    // Calculate PID output for motion control
+    double output = (kP * error) + (kI * integral) + (kD * derivative);
+
+    // Apply the PID output to both motors to move forward
+    leftMotor.spin(forward, output, percent);
+    rightMotor.spin(forward, output, percent);
+    // Update previous error
+    prevError = error;
+
+    // Check if the target position is reached
+    if (abs(error) < errorThreshold) 
+    {
+      leftMotor.stop();
+      rightMotor.stop();
+      wait(1,seconds);
+      leftMotor.spin(reverse);
+      rightMotor.spin(forward);
+      wait(2.5,seconds);
+      leftMotor.stop();
+      rightMotor.stop();
+         
+
+      double targetPosition = 360.0 * 14.0 / (2.75 * 3.14159265359);
+      leftMotor = motor(PORT4);
+      rightMotor= motor(PORT1);
+
+      // Reset motor encoders
+      leftMotor.setReversed(true);
+      //rightMotor.resetRotation();
+      while (true) 
+      {
+        // Calculate the average position of both motors in degrees
+        double currentPosition =(leftMotor.position(degrees) + rightMotor.position(degrees)) / 2.0;
+
+        // Calculate the error
+        double error = targetPosition - currentPosition;
+       
+        // Calculate integral and derivative terms
+        integral += error;
+        double derivative = error - prevError;
+
+        // Calculate PID output for motion control
+        double output = (kP * error) + (kI * integral) + (kD * derivative);
+
+        // Apply the PID output to both motors to move forward
+        leftMotor.spin(forward, output, percent);
+        rightMotor.spin(forward, output, percent);
+
+        // Update previous error
+        prevError = error;
+
+        // Check if the target position is reached
+        if (abs(error) < errorThreshold) 
+        {
+          leftMotor.stop();
+          rightMotor.stop();
+          wait(0.3, seconds);
+          leftMotor.spin(forward);
+          rightMotor.spin(reverse);
+          wait(2.2, seconds);
+          leftMotor.stop();
+          rightMotor.stop();
+          double targetPosition = 360.0 * 14.0 / (2.75 * 3.14159265359);
+          leftMotor = motor(PORT4);
+          rightMotor= motor(PORT1);
+
+          // Reset motor encoders
+          leftMotor.setReversed(true);
+          //rightMotor.resetRotation();
+          while (true) 
+          {
+            // Calculate the average position of both motors in degrees
+            double currentPosition =(leftMotor.position(degrees) + rightMotor.position(degrees)) / 2.0;
+
+            // Calculate the error
+            double error = targetPosition - currentPosition;
+       
+            // Calculate integral and derivative terms
+            integral += error;
+            double derivative = error - prevError;
+
+            // Calculate PID output for motion control
+            double output = (kP * error) + (kI * integral) + (kD * derivative);
+
+            // Apply the PID output to both motors to move forward
+            leftMotor.spin(forward, output, percent);
+            rightMotor.spin(forward, output, percent);
+
+            // Update previous error
+            prevError = error;
+
+            // Check if the target position is reached
+            if (abs(error) < errorThreshold) 
+            {
+              leftMotor.stop();
+              rightMotor.stop();
+              break;
+            } 
+
+            // Add a delay or control loop rate to control the PID loop frequency
+            // Example: task::sleep(10);
+          } // while(true)
+        }
+      }
+    }
+  }
+  return 0;
+}
